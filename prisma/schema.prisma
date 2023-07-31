@@ -102,7 +102,7 @@ model City {
 model Country {
   id          Int           @id @default(autoincrement())
   name        String
-  image       String
+  image       String?
   cities      City[]
   Vino        Vino[]
   User        User[]
