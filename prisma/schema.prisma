@@ -1,0 +1,289 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider     = "postgresql"
+  url          = env("DATABASE_URL")
+  directUrl    = env("DIRECT_URL")
+  relationMode = "prisma"
+}
+
+model User {
+  id          Int         @id @default(autoincrement())
+  googleId    String?     @unique
+  displayName String?
+  email       String      @unique
+  password    String?
+  image       String?
+  role        String
+  countryId   Int?        @unique
+  country     Country?    @relation(fields: [countryId], references: [id])
+  Notes       Notes[]
+  Favorites   Favorites[]
+
+  @@index([countryId])
+  @@map("user")
+}
+
+model Bodega {
+  id          Int           @id @default(autoincrement())
+  slug        String        @unique @default(uuid())
+  name        String
+  description String?
+  image       String
+  cityId      Int
+  city        City          @relation(fields: [cityId], references: [id])
+  featured    Int           @default(0)
+  services    Service[]     @relation("BodegaService")
+  news        News[]
+  events      Event[]
+  Vino        Vino[]        @relation("VinoBodega")
+  countryId   Int
+  country     Country       @relation(fields: [countryId], references: [id])
+  gallery     Gallery?
+  Excursion   Excursion[]
+  Experiencia Experiencia[]
+  Favorites   Favorites?
+
+  @@index([cityId])
+  @@index([countryId])
+  @@map("bodega")
+}
+
+model Image {
+  id        Int      @id @default(autoincrement())
+  url       String
+  gallery   Gallery? @relation(fields: [galleryId], references: [id])
+  galleryId Int?
+
+  @@index([galleryId])
+  @@map("image")
+}
+
+model Gallery {
+  id       Int     @id @default(autoincrement())
+  name     String
+  images   Image[]
+  bodega   Bodega  @relation(fields: [bodegaId], references: [id])
+  bodegaId Int     @unique
+
+  @@index([bodegaId])
+  @@map("gallery")
+}
+
+model Service {
+  id      Int      @id @default(autoincrement())
+  name    String
+  bodegas Bodega[] @relation("BodegaService")
+
+  @@index([name])
+  @@map("service")
+}
+
+model City {
+  id          Int           @id @default(autoincrement())
+  name        String
+  bodegas     Bodega[]
+  events      Event[]
+  countryId   Int
+  country     Country       @relation(fields: [countryId], references: [id])
+  Excursion   Excursion[]
+  Experiencia Experiencia[]
+
+  @@index([name])
+  @@index([countryId])
+  @@map("city")
+}
+
+model Country {
+  id          Int           @id @default(autoincrement())
+  name        String
+  image       String
+  cities      City[]
+  Vino        Vino[]
+  User        User[]
+  Bodega      Bodega[]
+  Excursion   Excursion[]
+  Experiencia Experiencia[]
+  Event       Event[]
+
+  @@index([name])
+  @@map("country")
+}
+
+model Event {
+  id          Int       @id @default(autoincrement())
+  name        String
+  title       String
+  image       String
+  description String?
+  featured    Int       @default(0)
+  duration    String
+  date        DateTime?
+  bodega      Bodega?   @relation(fields: [bodegaId], references: [id])
+  bodegaId    Int?
+  city        City      @relation(fields: [cityId], references: [id])
+  cityId      Int
+  country     Country   @relation(fields: [countryId], references: [id])
+  countryId   Int
+
+  @@index([cityId])
+  @@index([bodegaId])
+  @@index([countryId])
+  @@map("event")
+}
+
+model News {
+  id          Int     @id @default(autoincrement())
+  name        String
+  description String?
+  bodegaId    Int?
+  bodega      Bodega? @relation(fields: [bodegaId], references: [id])
+
+  @@index([bodegaId])
+  @@map("news")
+}
+
+model Vino {
+  id        Int        @id @default(autoincrement())
+  name      String
+  title     String
+  image     String
+  featured  Int        @default(0)
+  type      Type[]     @relation("VinoType")
+  cepa      Cepa[]     @relation("VinoCepa")
+  barrica   Int        @default(0)
+  awared    Int        @default(0)
+  varietal  Int        @default(0)
+  countryId Int
+  country   Country    @relation(fields: [countryId], references: [id])
+  bodega    Bodega[]   @relation("VinoBodega")
+  Favorites Favorites?
+
+  @@index([countryId])
+  @@map("vino")
+}
+
+model Type {
+  id    Int    @id @default(autoincrement())
+  name  String
+  vinos Vino[] @relation("VinoType")
+
+  @@map("type")
+}
+
+model Cepa {
+  id    Int    @id @default(autoincrement())
+  name  String
+  vinos Vino[] @relation("VinoCepa")
+
+  @@map("cepa")
+}
+
+model Excursion {
+  id          Int        @id @default(autoincrement())
+  title       String
+  image       String
+  description String?
+  date        DateTime?
+  duration    String
+  featured    Int        @default(0)
+  city        City       @relation(fields: [cityId], references: [id])
+  cityId      Int
+  country     Country    @relation(fields: [countryId], references: [id])
+  countryId   Int
+  bodega      Bodega?    @relation(fields: [bodegaId], references: [id])
+  bodegaId    Int?
+  Favorites   Favorites?
+
+  @@index([countryId])
+  @@index([cityId])
+  @@index([bodegaId])
+  @@map("excursion")
+}
+
+model Experiencia {
+  id          Int        @id @default(autoincrement())
+  title       String
+  image       String
+  description String?
+  featured    Int        @default(0)
+  duration    String?
+  city        City       @relation(fields: [cityId], references: [id])
+  cityId      Int
+  country     Country    @relation(fields: [countryId], references: [id])
+  countryId   Int
+  bodega      Bodega?    @relation(fields: [bodegaId], references: [id])
+  bodegaId    Int?
+  idioma      Idioma     @default(ESPANOL)
+  Favorites   Favorites?
+
+  @@index([cityId])
+  @@index([countryId])
+  @@index([bodegaId])
+  @@map("experiencia")
+}
+
+enum Idioma {
+  ESPANOL
+  ENGLISH
+  PORTUGUES
+}
+
+model Notes {
+  id          Int      @id @default(autoincrement())
+  title       String
+  image       String?
+  description String?
+  date        DateTime @default(now())
+  user        User     @relation(fields: [userId], references: [id])
+  userId      Int
+
+  @@index([userId])
+  @@map("notes")
+}
+
+model Restaurante {
+  id           Int        @id @default(autoincrement())
+  title        String
+  image        String
+  description  String?
+  address      String
+  featured     Int
+  phone        String
+  openingHours String
+  awards       String
+  chef         String
+  sommelier    String
+  Favorites    Favorites?
+
+  @@map("restaurante")
+}
+
+model Favorites {
+  id            Int          @id @default(autoincrement())
+  user          User         @relation(fields: [userId], references: [id])
+  userId        Int
+  bodega        Bodega?      @relation(fields: [bodegaId], references: [id])
+  bodegaId      Int?         @unique
+  vino          Vino?        @relation(fields: [vinoId], references: [id])
+  vinoId        Int?         @unique
+  excursion     Excursion?   @relation(fields: [excursionId], references: [id])
+  excursionId   Int?         @unique
+  experiencia   Experiencia? @relation(fields: [experienciaId], references: [id])
+  experienciaId Int?         @unique
+  restaurante   Restaurante? @relation(fields: [restauranteId], references: [id])
+  restauranteId Int?         @unique
+
+  @@index([userId])
+  @@index([bodegaId])
+  @@index([vinoId])
+  @@index([excursionId])
+  @@index([experienciaId])
+  @@index([restauranteId])
+  @@map("favorites")
+}
