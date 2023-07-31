@@ -34,7 +34,7 @@ model Bodega {
   slug        String        @unique @default(uuid())
   name        String
   description String?
-  image       String
+  image       String?
   cityId      Int
   city        City          @relation(fields: [cityId], references: [id])
   featured    Int           @default(0)
@@ -119,7 +119,7 @@ model Event {
   id          Int       @id @default(autoincrement())
   name        String
   title       String
-  image       String
+  image       String?
   description String?
   featured    Int       @default(0)
   duration    String
@@ -152,7 +152,7 @@ model Vino {
   id        Int        @id @default(autoincrement())
   name      String
   title     String
-  image     String
+  image     String?
   featured  Int        @default(0)
   type      Type[]     @relation("VinoType")
   cepa      Cepa[]     @relation("VinoCepa")
