@@ -4,8 +4,16 @@ import { createTable, filterAndSort, getTable } from '../middleware/index.middle
 export const filterAndSortVinos = async (req, res) => {
     try {
         const vinos = await filterAndSort('vino', req.query, {
-            cepa: true,
-            type: true,
+            cepa: {
+                select: {
+                    name: true
+                }
+            },
+            type: {
+                select: {
+                    name: true
+                }
+            },
             bodega: {
                 select: {
                     name: true
