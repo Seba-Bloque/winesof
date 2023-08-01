@@ -10,6 +10,7 @@ export const filterAndSortBodegas = async (req, res) => {
         if (bodegas.data.length === 0) return res.status(404).json({ mensaje: 'No se encontraron bodegas que cumplan los criterios de búsqueda' });
         res.json(bodegas.data);
     } catch (error) {
+        console.log(error);
         res.status(500).json({ error: 'Error al obtener las bodegas' });
     }
 }

@@ -128,7 +128,7 @@ export const updateTable = async (model, id, dataBody) => {
         Object.keys(dataBody).forEach((data) => {
             const key = data;
             const value = dataBody[data];
-            if (key.includes('Id')) return parsedData[key.replace('Id', '')] = { connect: { id: value } };
+            if (key.includes('Id')) return parsedData[key.replace('Id', '')] = { connect: { id: parseInt(value) } };
             if (Array.isArray(value)) return parsedData[key] = { set: value.map(val => ({ id: parseInt(val) })) }
             return parsedData[key] = value;
         });
