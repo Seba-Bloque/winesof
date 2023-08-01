@@ -20,7 +20,7 @@ model User {
   password    String?
   image       String?
   role        String
-  countryId   Int?        @unique
+  countryId   Int?        @unique @default(1)
   country     Country?    @relation(fields: [countryId], references: [id])
   Notes       Notes[]
   Favorites   Favorites[]
@@ -42,8 +42,8 @@ model Bodega {
   news        News[]
   events      Event[]
   Vino        Vino[]        @relation("VinoBodega")
-  countryId   Int
-  country     Country       @relation(fields: [countryId], references: [id])
+  countryId   Int?          @default(1)
+  country     Country?      @relation(fields: [countryId], references: [id])
   gallery     Gallery?
   Excursion   Excursion[]
   Experiencia Experiencia[]
@@ -89,8 +89,8 @@ model City {
   name        String
   bodegas     Bodega[]
   events      Event[]
-  countryId   Int
-  country     Country       @relation(fields: [countryId], references: [id])
+  countryId   Int?          @default(1)
+  country     Country?      @relation(fields: [countryId], references: [id])
   Excursion   Excursion[]
   Experiencia Experiencia[]
 
@@ -128,8 +128,8 @@ model Event {
   bodegaId    Int?
   city        City      @relation(fields: [cityId], references: [id])
   cityId      Int
-  country     Country   @relation(fields: [countryId], references: [id])
-  countryId   Int
+  country     Country?  @relation(fields: [countryId], references: [id])
+  countryId   Int?      @default(1)
 
   @@index([cityId])
   @@index([bodegaId])
@@ -159,7 +159,7 @@ model Vino {
   barrica   Int        @default(0)
   awared    Int        @default(0)
   varietal  Int        @default(0)
-  countryId Int
+  countryId Int        @default(1)
   country   Country    @relation(fields: [countryId], references: [id])
   bodega    Bodega[]   @relation("VinoBodega")
   Favorites Favorites?
@@ -194,8 +194,8 @@ model Excursion {
   featured    Int        @default(0)
   city        City       @relation(fields: [cityId], references: [id])
   cityId      Int
-  country     Country    @relation(fields: [countryId], references: [id])
-  countryId   Int
+  country     Country?   @relation(fields: [countryId], references: [id])
+  countryId   Int?       @default(1)
   bodega      Bodega?    @relation(fields: [bodegaId], references: [id])
   bodegaId    Int?
   Favorites   Favorites?
@@ -215,8 +215,8 @@ model Experiencia {
   duration    String?
   city        City       @relation(fields: [cityId], references: [id])
   cityId      Int
-  country     Country    @relation(fields: [countryId], references: [id])
-  countryId   Int
+  country     Country?   @relation(fields: [countryId], references: [id])
+  countryId   Int?       @default(1)
   bodega      Bodega?    @relation(fields: [bodegaId], references: [id])
   bodegaId    Int?
   idioma      Idioma     @default(ESPANOL)

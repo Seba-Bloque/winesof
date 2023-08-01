@@ -64,7 +64,6 @@ export const filterAndSort = async (model, filters, includes, user) => {
 
         return { success: true, data: results };
     } catch (error) {
-        console.log(error);
         return { success: false, message: 'Error al obtener los registros' };
     }
 };
@@ -88,7 +87,6 @@ export const createTable = async (model, dataBody) => {
 
         return { success: true, status: 200, data: modelCreated };
     } catch (error) {
-        console.log(error);
         return { success: false, message: 'Error al obtener los registros' };
     }
 };
@@ -112,7 +110,6 @@ export const getTable = async (model, params, user) => {
         if (!modelo) return { success: false, status: 500, message: `No se encontraron resultados para ${model}` };
         return { success: true, status: 200, data: modelo };
     } catch (error) {
-        console.log(error);
         return { success: false, message: 'Error al obtener los registros' };
     }
 };
@@ -141,8 +138,7 @@ export const updateTable = async (model, id, dataBody) => {
 
         return { success: true, status: 200, data: modelUpdated };
     } catch (error) {
-        console.log(error);
-        return { success: false, message: 'Error al obtener los registros' };
+        return { success: false, status: 500, message: 'Error al obtener los registros' };
     }
 };
 // Delete tabla
@@ -156,7 +152,6 @@ export const deleteTable = async (model, id) => {
         await prisma[model].delete({ where: { id: modelo.id } });
         return { success: true, status: 200 };
     } catch (error) {
-        console.log(error);
         return { success: false, message: 'Error al obtener los registros' };
     }
 };

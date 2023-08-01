@@ -49,7 +49,7 @@ export const updateBodega = async (req, res) => {
 // Delete de bodega
 export const deleteBodega = async (req, res) => {
     try {
-        const bodega = await deleteTable('bodega', parseInt(req.params.id), req.body);
+        const bodega = await deleteTable('bodega', parseInt(req.params.id));
         if (!bodega.success) return res.status(bodega.status).json({ error: bodega.message });
         res.status(bodega.status).json({ message: 'La bodega fue eliminada correctamente' })
     } catch (error) {
