@@ -10,7 +10,7 @@ export const getExcursiones = async (req, res) => {
                     name: true
                 }
             },
-            bodega: {
+            country: {
                 select: {
                     name: true
                 }
