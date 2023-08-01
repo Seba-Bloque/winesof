@@ -209,6 +209,7 @@ model Excursion {
 
 model Experiencia {
   id          Int        @id @default(autoincrement())
+  slug        String?    @unique @default(uuid())
   title       String
   image       String
   description String?
